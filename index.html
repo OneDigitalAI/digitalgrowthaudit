@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OneDigital — Digital Growth Audit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1e1c1b;
+  --accent:#8c46f5;
+  --accent-dim:rgba(140,70,245,0.09);
+  --accent-border:rgba(140,70,245,0.25);
+  --bg:#f1f1f1;
+  --card:#ffffff;
+  --border:rgba(30,28,27,0.1);
+  --border-med:rgba(30,28,27,0.2);
+  --muted:#7a7a7a;
+  --text:#1e1c1b;
+  --ff:'Inter',system-ui,sans-serif;
+  --r:12px;--r-sm:8px;
+}
+body{font-family:var(--ff);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* BAR */
+.bar{background:#fff;border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:58px;position:sticky;top:0;z-index:50}
+.bar img{height:24px;display:block}
+.badge{font-size:.65rem;font-weight:600;background:var(--dark);color:#fff;padding:4px 12px;border-radius:100px;letter-spacing:.05em;white-space:nowrap}
+
+/* HERO */
+.hero{background:var(--dark);color:#fff;padding:68px 32px 56px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 50% -10%,rgba(140,70,245,.52) 0%,transparent 68%);pointer-events:none}
+.hero>*{position:relative}
+.hero-tag{display:inline-block;font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:18px;background:rgba(140,70,245,.15);padding:5px 14px;border-radius:100px;border:1px solid rgba(140,70,245,.3)}
+.hero h1{font-size:clamp(1.75rem,4.5vw,2.9rem);font-weight:800;line-height:1.08;margin-bottom:14px;letter-spacing:-.025em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{font-size:.92rem;color:rgba(255,255,255,.58);max-width:480px;margin:0 auto 32px;line-height:1.7;font-weight:400}
+.hero-stats{display:flex;justify-content:center;gap:48px;padding-top:28px;border-top:1px solid rgba(255,255,255,.07);flex-wrap:wrap}
+.hero-stat strong{display:block;font-size:1.55rem;font-weight:800;color:var(--accent);letter-spacing:-.02em;line-height:1.1}
+.hero-stat span{font-size:.7rem;color:rgba(255,255,255,.38);line-height:1.5;display:block;margin-top:2px}
+
+/* PROGRESS */
+.prog{background:#fff;border-bottom:1px solid var(--border);padding:14px 40px}
+.prog-meta{display:flex;justify-content:space-between;margin-bottom:7px}
+.prog-label{font-size:.67rem;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.prog-count{font-size:.67rem;font-weight:700;color:var(--accent)}
+.prog-track{height:3px;background:var(--border);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:100px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+/* MAIN */
+main{max-width:660px;width:100%;margin:0 auto;padding:32px 24px 80px}
+
+/* SCREENS */
+.screen{display:none;animation:fu .28s ease}
+.screen.active{display:block}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* BLOCK TAG */
+.btag{display:inline-flex;align-items:center;gap:4px;font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);padding:4px 10px;border-radius:100px;margin-bottom:12px;border:1px solid var(--accent-border)}
+
+/* Q CARD */
+.qcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:30px;margin-bottom:16px}
+.qnum{font-size:.65rem;font-weight:600;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
+.qtext{font-size:1.1rem;font-weight:700;line-height:1.32;margin-bottom:6px;letter-spacing:-.015em}
+.qsub{font-size:.8rem;color:var(--muted);line-height:1.6;margin-bottom:22px}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:12px 15px;border:1.5px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:border-color .13s,background .13s;background:#fff;text-align:left;width:100%;font-family:var(--ff)}
+.opt:hover{border-color:var(--accent);background:var(--accent-dim)}
+.opt.sel{border-color:var(--accent);background:var(--accent-dim)}
+.odot{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border-med);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .13s;margin-top:2px}
+.opt.sel .odot{background:var(--accent);border-color:var(--accent)}
+.opt.sel .odot::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+.omain{font-size:.855rem;font-weight:500;line-height:1.4;color:var(--text);display:block}
+.ohint{font-size:.7rem;color:var(--muted);margin-top:2px;display:block}
+
+/* REVENUE */
+.revgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:22px}
+.ropt{padding:15px;border:1.5px solid var(--border);border-radius:var(--r-sm);cursor:pointer;transition:all .13s;text-align:center;background:#fff;font-family:var(--ff);width:100%}
+.ropt:hover{border-color:var(--accent);background:var(--accent-dim)}
+.ropt.sel{border-color:var(--accent);background:var(--accent-dim)}
+.ropt strong{display:block;font-size:.92rem;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.ropt span{font-size:.7rem;color:var(--muted);margin-top:1px;display:block}
+
+/* BUTTONS */
+.nav{display:flex;justify-content:space-between;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 22px;border-radius:var(--r-sm);font-family:var(--ff);font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all .13s;text-decoration:none}
+.btn-p{background:var(--dark);color:#fff}
+.btn-p:hover{background:var(--accent)}
+.btn-p:disabled{opacity:.28;cursor:not-allowed}
+.btn-g{background:transparent;color:var(--muted);border:1px solid var(--border);font-family:var(--ff)}
+.btn-g:hover{border-color:var(--dark);color:var(--dark)}
+.btn-a{background:var(--accent);color:#fff;font-size:.88rem;padding:13px 26px;font-weight:700}
+.btn-a:hover{background:#7a38e0;transform:translateY(-1px)}
+
+/* INTRO */
+.icard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:36px;text-align:center}
+.icard h2{font-size:1.3rem;font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.icard>p{font-size:.855rem;color:var(--muted);line-height:1.65;margin-bottom:22px;max-width:420px;margin-left:auto;margin-right:auto}
+.steps{display:flex;gap:10px;justify-content:center;margin-bottom:26px;flex-wrap:wrap}
+.step{display:flex;align-items:center;gap:7px;font-size:.76rem;font-weight:500}
+.sdot{width:22px;height:22px;border-radius:50%;background:var(--accent-dim);color:var(--accent);font-weight:700;font-size:.67rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent-border);flex-shrink:0}
+.divl{height:1px;background:var(--border);margin:0 0 22px}
+
+/* LEAD */
+.lcard{background:var(--dark);color:#fff;border-radius:var(--r);padding:36px;text-align:center;position:relative;overflow:hidden}
+.lcard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 75% 55% at 50% -5%,rgba(140,70,245,.45) 0%,transparent 65%)}
+.lcard>*{position:relative}
+.lcard h2{font-size:1.35rem;font-weight:800;margin-bottom:6px;letter-spacing:-.02em}
+.lcard h2 em{font-style:normal;color:var(--accent)}
+.lcard>p{font-size:.83rem;color:rgba(255,255,255,.52);margin-bottom:22px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:9px}
+.fg{display:flex;flex-direction:column;gap:4px;text-align:left}
+.fg.full{grid-column:1/-1}
+.fg label{font-size:.62rem;font-weight:600;color:rgba(255,255,255,.42);letter-spacing:.07em;text-transform:uppercase}
+.fg input{padding:10px 12px;border-radius:var(--r-sm);border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.07);color:#fff;font-family:var(--ff);font-size:.855rem;outline:none;transition:border-color .13s}
+.fg input::placeholder{color:rgba(255,255,255,.22)}
+.fg input:focus{border-color:rgba(140,70,245,.55)}
+.priv{font-size:.68rem;color:rgba(255,255,255,.28);margin-top:12px}
+.err{color:#f87171;font-size:.76rem;margin-top:8px;text-align:center}
+
+/* RESULTS HERO */
+.rhero{text-align:center;padding:36px 24px 26px;background:var(--dark);border-radius:var(--r);color:#fff;margin-bottom:14px;position:relative;overflow:hidden}
+.rhero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 65% 75% at 50% 0%,rgba(140,70,245,.5) 0%,transparent 65%)}
+.rhero>*{position:relative}
+.ringw{display:flex;justify-content:center;margin-bottom:16px}
+.ring{width:116px;height:116px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(255,255,255,.07);stroke-width:7}
+.rfill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)}
+.rinn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scn{font-size:1.85rem;font-weight:800;color:var(--accent);line-height:1;letter-spacing:-.02em}
+.scd{font-size:.65rem;color:rgba(255,255,255,.32)}
+.ptag{display:inline-block;background:var(--accent);color:#fff;padding:4px 13px;border-radius:100px;font-weight:700;font-size:.65rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px}
+.rhero h2{font-size:1.2rem;font-weight:700;margin-bottom:6px;letter-spacing:-.015em}
+.rhero p{font-size:.83rem;color:rgba(255,255,255,.55);max-width:380px;margin:0 auto;line-height:1.62}
+
+/* IMPACT */
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.icard{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:18px 14px;text-align:center}
+.iico{font-size:1rem;margin-bottom:5px}
+.ival{font-size:1.15rem;font-weight:800;color:var(--text);line-height:1;margin-bottom:3px;letter-spacing:-.02em}
+.ival.g{color:#16a34a}.ival.p{color:var(--accent)}
+.ilbl{font-size:.67rem;color:var(--muted);line-height:1.3}
+
+/* RADAR */
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px}
+.rcard h3{font-size:.83rem;font-weight:700;margin-bottom:16px;letter-spacing:-.01em}
+.rwrap{max-width:290px;margin:0 auto}
+
+/* BREAKDOWN */
+.bdcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px}
+.bdcard h3{font-size:.83rem;font-weight:700;margin-bottom:14px;letter-spacing:-.01em}
+.drow{display:flex;align-items:center;gap:11px;margin-bottom:11px}
+.dlbl{flex:0 0 150px;font-size:.77rem;font-weight:500}
+.dtrack{flex:1;height:5px;background:var(--bg);border-radius:100px;overflow:hidden}
+.dfill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.dscore{flex:0 0 32px;text-align:right;font-size:.72rem;font-weight:700}
+
+/* CTA */
+.ctacard{background:var(--dark);border-radius:var(--r);padding:36px 28px;text-align:center;color:#fff;position:relative;overflow:hidden}
+.ctacard::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(140,70,245,.42) 0%,transparent 65%)}
+.ctacard>*{position:relative}
+.ctacard h2{font-size:1.3rem;font-weight:800;margin-bottom:9px;letter-spacing:-.02em}
+.ctacard>p{font-size:.83rem;color:rgba(255,255,255,.52);margin-bottom:18px;max-width:360px;margin-left:auto;margin-right:auto;line-height:1.65}
+.cbulls{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:20px}
+.cb{font-size:.73rem;color:rgba(255,255,255,.58);display:flex;align-items:center;gap:4px}
+.cb::before{content:'✓';color:var(--accent);font-weight:700}
+
+/* SPINNER */
+.spin{width:15px;height:15px;border:2px solid rgba(255,255,255,.22);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;flex-shrink:0}
+@keyframes sp{to{transform:rotate(360deg)}}
+.sico{width:46px;height:46px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;margin:0 auto 13px;font-size:1.1rem}
+
+@media(max-width:560px){
+  .bar{padding:0 18px}.hero{padding:48px 18px 40px}.hero-stats{gap:20px}
+  main{padding:22px 14px 60px}
+  .qcard,.icard,.lcard,.ctacard{padding:20px 15px}
+  .fgrid,.revgrid,.igrid{grid-template-columns:1fr}
+  .dlbl{flex:0 0 115px;font-size:.71rem}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <img src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a1d638d9088731999a3b3e___Primary_Logo_Black.svg" alt="OneDigital"/>
+  <span class="badge">Digital Growth Audit</span>
+</header>
+
+<div class="hero" id="hero">
+  <div class="hero-tag">Gratis · 3 minuten · Geen verplichtingen</div>
+  <h1>Hoeveel omzet en marge<br/><em>laat jouw bedrijf liggen?</em></h1>
+  <p>Onze Digital Growth Audit analyseert 8 kritieke hefbomen voor omzetgroei en EBITDA-verbetering. Jij krijgt een persoonlijk rapport.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>91%</strong><span>van bedrijven laat digitale<br/>groeikansen onbenut</span></div>
+    <div class="hero-stat"><strong>25–40%</strong><span>gemiddelde omzetgroei<br/>die overblijft op tafel</span></div>
+    <div class="hero-stat"><strong>3 min</strong><span>is alles wat je<br/>nodig hebt</span></div>
+  </div>
+</div>
+
+<div class="prog" id="prog" style="display:none">
+  <div class="prog-meta">
+    <span class="prog-label" id="prog-block">Blok 1 van 3</span>
+    <span class="prog-count" id="prog-count">Vraag 1 / 8</span>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<main>
+
+<!-- INTRO -->
+<div class="screen active" id="s-intro">
+  <div class="icard">
+    <h2>Jouw groei-diagnose in 3 minuten</h2>
+    <p>8 gerichte vragen over jouw commerciële motor, operationele marge en digitale groeipositie. Resultaat: een persoonlijk rapport met indicatief groeipotentieel in omzet en EBITDA.</p>
+    <div class="steps">
+      <div class="step"><div class="sdot">1</div>Vul de scan in</div>
+      <div class="step"><div class="sdot">2</div>Ontvang je score</div>
+      <div class="step"><div class="sdot">3</div>Plan een gratis call</div>
+    </div>
+    <div class="divl"></div>
+    <div class="btag">Stap 0 · Bedrijfsprofiel</div>
+    <div class="qtext" style="font-size:.98rem;margin-bottom:4px">Wat is jullie huidige jaaromzet?</div>
+    <div class="qsub">Dit calibreert jouw groeipotentieel op basis van vergelijkbare bedrijven.</div>
+    <div class="revgrid">
+      <button class="ropt" onclick="selRev(this,'<1M')"><strong>Onder €1M</strong><span>Startende groeier</span></button>
+      <button class="ropt" onclick="selRev(this,'1M-3M')"><strong>€1M – €3M</strong><span>Groeiende KMO</span></button>
+      <button class="ropt" onclick="selRev(this,'3M-10M')"><strong>€3M – €10M</strong><span>Gevestigde speler</span></button>
+      <button class="ropt" onclick="selRev(this,'>10M')"><strong>Boven €10M</strong><span>Scale-up / Enterprise</span></button>
+    </div>
+    <button class="btn btn-p" id="start-btn" onclick="go('1')" disabled style="width:100%;justify-content:center;padding:13px 22px">Start de audit →</button>
+  </div>
+</div>
+
+<!-- Q1 -->
+<div class="screen" id="s-1">
+  <div class="btag">📈 Blok 1 · Commerciële motor</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 1 van 8</div>
+    <div class="qtext">Waar komen jullie nieuwe klanten vandaan?</div>
+    <div class="qsub">De bronnen van jullie pipeline bepalen direct het groeiplafond van jullie bedrijf.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,1,1)"><span class="odot"></span><span><span class="omain">Uitsluitend via netwerk, referrals en bestaande klanten</span><span class="ohint">Groei is afhankelijk van persoonlijk kapitaal — moeilijk schaalbaar</span></span></button>
+      <button class="opt" onclick="pick(this,1,2)"><span class="odot"></span><span><span class="omain">Sporadisch via online kanalen, maar zonder systeem of meetbaarheid</span><span class="ohint">Potentieel aanwezig, maar ongericht en onvolledig benut</span></span></button>
+      <button class="opt" onclick="pick(this,1,3)"><span class="odot"></span><span><span class="omain">Online kanalen genereren leads, maar pipeline-attributie is beperkt</span><span class="ohint">Groei is er, maar budget-allocatie gebeurt niet data-gedreven</span></span></button>
+      <button class="opt" onclick="pick(this,1,4)"><span class="odot"></span><span><span class="omain">Gediversifieerde digitale pipeline met meetbare cost per lead per kanaal</span><span class="ohint">Schaalbare commerciële motor — klaar voor groeiversnelling</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('intro')">← Terug</button><button class="btn btn-p" id="n1" onclick="go('2')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q2 -->
+<div class="screen" id="s-2">
+  <div class="btag">📈 Blok 1 · Commerciële motor</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 2 van 8</div>
+    <div class="qtext">Hoe nauwkeurig kennen jullie jullie sales closing rate en gemiddelde sales cyclus?</div>
+    <div class="qsub">Een closing rate van 20% vs. 35% op dezelfde lead-instroom = 75% meer omzet zonder extra marketingbudget.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,2,1)"><span class="odot"></span><span><span class="omain">We volgen dit niet systematisch — gevoel stuurt de beslissingen</span></span></button>
+      <button class="opt" onclick="pick(this,2,2)"><span class="odot"></span><span><span class="omain">We hebben een ruwe inschatting maar geen betrouwbare data</span></span></button>
+      <button class="opt" onclick="pick(this,2,3)"><span class="odot"></span><span><span class="omain">We meten het maar optimaliseren er niet actief op via een salesproces</span></span></button>
+      <button class="opt" onclick="pick(this,2,4)"><span class="odot"></span><span><span class="omain">Duidelijke benchmarks en actieve conversie-optimalisatie via CRM-gedreven salesproces</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('1')">← Terug</button><button class="btn btn-p" id="n2" onclick="go('3')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q3 -->
+<div class="screen" id="s-3">
+  <div class="btag">📈 Blok 1 · Commerciële motor</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 3 van 8</div>
+    <div class="qtext">Hoe actief sturen jullie op klantretentie, upsell en lifetime value?</div>
+    <div class="qsub">5% hogere klantretentie levert gemiddeld 25–95% hogere bedrijfswinst op — de meest onderschatte EBITDA-hefboom.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,3,1)"><span class="odot"></span><span><span class="omain">We focussen op acquisitie — retentie en upsell zijn geen strategische prioriteit</span></span></button>
+      <button class="opt" onclick="pick(this,3,2)"><span class="odot"></span><span><span class="omain">We proberen klanten tevreden te houden maar sturen niet proactief op LTV of upsell</span></span></button>
+      <button class="opt" onclick="pick(this,3,3)"><span class="odot"></span><span><span class="omain">We hebben een retentiestrategie maar upsell-processen zijn nog informeel</span></span></button>
+      <button class="opt" onclick="pick(this,3,4)"><span class="odot"></span><span><span class="omain">LTV is een expliciete KPI — upsell en retentie zijn gestructureerd en geautomatiseerd</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('2')">← Terug</button><button class="btn btn-p" id="n3" onclick="go('4')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q4 -->
+<div class="screen" id="s-4">
+  <div class="btag">⚙️ Blok 2 · Operationele marge</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 4 van 8</div>
+    <div class="qtext">Hoe nauwkeurig weten jullie welke euro marketinginvestering wat oplevert?</div>
+    <div class="qsub">Zonder funnel-attributie subsidieert gemiddeld 30–40% van het marketingbudget kanalen die niet converteren — directe EBITDA-erosie.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,4,1)"><span class="odot"></span><span><span class="omain">We meten weinig — ROI van marketing is grotendeels onbekend</span></span></button>
+      <button class="opt" onclick="pick(this,4,2)"><span class="odot"></span><span><span class="omain">We volgen basismetrics (verkeer, leads) maar geen funnel-attributie</span></span></button>
+      <button class="opt" onclick="pick(this,4,3)"><span class="odot"></span><span><span class="omain">We meten conversies maar hebben nog geen volledig geïntegreerd attribuatiemodel</span></span></button>
+      <button class="opt" onclick="pick(this,4,4)"><span class="odot"></span><span><span class="omain">Volledige funnel-attributie — we kennen de ROI per kanaal, campagne en euro</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('3')">← Terug</button><button class="btn btn-p" id="n4" onclick="go('5')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q5 -->
+<div class="screen" id="s-5">
+  <div class="btag">⚙️ Blok 2 · Operationele marge</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 5 van 8</div>
+    <div class="qtext">Hoeveel van jullie marketing- en salesprocessen zijn geautomatiseerd of AI-ondersteund?</div>
+    <div class="qsub">Teams met geïntegreerde AI-automatisering produceren gemiddeld 3× meer output met dezelfde headcount — een directe hefboom op EBITDA zonder omzetgroei.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,5,1)"><span class="odot"></span><span><span class="omain">Vrijwel niets — het meeste werk is handmatig en tijdsintensief</span></span></button>
+      <button class="opt" onclick="pick(this,5,2)"><span class="odot"></span><span><span class="omain">Enkele losse tools, maar geen echte automatisering of AI-integratie</span></span></button>
+      <button class="opt" onclick="pick(this,5,3)"><span class="odot"></span><span><span class="omain">Deels geautomatiseerd, AI wordt incidenteel en individueel gebruikt</span></span></button>
+      <button class="opt" onclick="pick(this,5,4)"><span class="odot"></span><span><span class="omain">AI en automatisering zijn operationeel ingebed met duidelijke processen en governance</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('4')">← Terug</button><button class="btn btn-p" id="n5" onclick="go('6')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q6 -->
+<div class="screen" id="s-6">
+  <div class="btag">⚙️ Blok 2 · Operationele marge</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 6 van 8</div>
+    <div class="qtext">Op basis waarvan neemt jullie management commerciële en operationele beslissingen?</div>
+    <div class="qsub">Datafragmentatie vertraagt besluitvorming en veroorzaakt gemiste optimalisaties — conservatief geschat 10–15% marge-impact.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,6,1)"><span class="odot"></span><span><span class="omain">Ervaring en buikgevoel — data speelt een beperkte rol</span></span></button>
+      <button class="opt" onclick="pick(this,6,2)"><span class="odot"></span><span><span class="omain">Basisdata beschikbaar maar verspreid over losse tools en spreadsheets</span></span></button>
+      <button class="opt" onclick="pick(this,6,3)"><span class="odot"></span><span><span class="omain">Dashboards per afdeling maar nog geen geïntegreerde managementrapportering</span></span></button>
+      <button class="opt" onclick="pick(this,6,4)"><span class="odot"></span><span><span class="omain">Geïntegreerde databron stuurt operationele en strategische beslissingen in realtime</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('5')">← Terug</button><button class="btn btn-p" id="n6" onclick="go('7')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q7 -->
+<div class="screen" id="s-7">
+  <div class="btag">🚀 Blok 3 · Digitale groeipositie</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 7 van 8</div>
+    <div class="qtext">Hoe vinden potentiële klanten jullie via Google, LinkedIn en AI-zoekmachines?</div>
+    <div class="qsub">AI-zoekopdrachten (ChatGPT, Gemini, Perplexity) genereren al significant verkeer. Wie hier nu niet op inspeelt, bouwt een achterstand die moeilijk in te halen is.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,7,1)"><span class="odot"></span><span><span class="omain">Nauwelijks online vindbaar — we trekken weinig tot geen verkeer organisch aan</span></span></button>
+      <button class="opt" onclick="pick(this,7,2)"><span class="odot"></span><span><span class="omain">Basisaanwezigheid online maar beperkt organisch bereik, geen AI-search strategie</span></span></button>
+      <button class="opt" onclick="pick(this,7,3)"><span class="odot"></span><span><span class="omain">Goed vindbaar op Google voor kernzoekwoorden — AI-search nog niet op radar</span></span></button>
+      <button class="opt" onclick="pick(this,7,4)"><span class="odot"></span><span><span class="omain">Sterk vindbaar via SEO én actief geoptimaliseerd voor AI-zoekopdrachten (GEO/AEO)</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('6')">← Terug</button><button class="btn btn-p" id="n7" onclick="go('8')" disabled>Volgende →</button></div>
+</div>
+
+<!-- Q8 -->
+<div class="screen" id="s-8">
+  <div class="btag">🚀 Blok 3 · Digitale groeipositie</div>
+  <div class="qcard">
+    <div class="qnum">Vraag 8 van 8</div>
+    <div class="qtext">Als jullie morgen 2× zoveel leads genereren — kan jullie infrastructuur dat absorberen zonder evenredig meer mensen?</div>
+    <div class="qsub">Dit is de definitie van EBITDA-leverage: schaalbare groei zonder lineair meer kosten. Groei die altijd extra headcount vereist is structureel duurder en minder winstgevend.</div>
+    <div class="opts">
+      <button class="opt" onclick="pick(this,8,1)"><span class="odot"></span><span><span class="omain">Nee — we zouden vastlopen in capaciteit en handmatige processen</span></span></button>
+      <button class="opt" onclick="pick(this,8,2)"><span class="odot"></span><span><span class="omain">Gedeeltelijk — maar met veel manueel werk en bijkomende mensen</span></span></button>
+      <button class="opt" onclick="pick(this,8,3)"><span class="odot"></span><span><span class="omain">Grotendeels wel — maar niet zonder extra mensen op kritieke plekken</span></span></button>
+      <button class="opt" onclick="pick(this,8,4)"><span class="odot"></span><span><span class="omain">Ja — onze digitale infrastructuur schaalt zonder evenredig meer operationele kosten</span></span></button>
+    </div>
+  </div>
+  <div class="nav"><button class="btn btn-g" onclick="go('7')">← Terug</button><button class="btn btn-p" id="n8" onclick="go('lead')" disabled>Bekijk mijn resultaat →</button></div>
+</div>
+
+<!-- LEAD -->
+<div class="screen" id="s-lead">
+  <div class="lcard">
+    <div class="sico">🔒</div>
+    <h2>Jouw rapport is <em>klaar</em></h2>
+    <p>Vul je gegevens in om je persoonlijke Digital Growth Audit te ontvangen — inclusief indicatief EBITDA-groeipotentieel.</p>
+    <div class="fgrid">
+      <div class="fg"><label>Voornaam *</label><input id="fn" type="text" placeholder="Jan"/></div>
+      <div class="fg"><label>Achternaam *</label><input id="ln" type="text" placeholder="Janssen"/></div>
+      <div class="fg"><label>Bedrijfsnaam *</label><input id="co" type="text" placeholder="Jouw Bedrijf BV"/></div>
+      <div class="fg"><label>Telefoon</label><input id="ph" type="tel" placeholder="+32 479 00 00 00"/></div>
+      <div class="fg full"><label>E-mailadres *</label><input id="em" type="email" placeholder="jan@jouwbedrijf.be"/></div>
+    </div>
+    <div id="err" class="err" style="display:none"></div>
+    <button class="btn btn-a" id="sub-btn" onclick="submit()" style="width:100%;justify-content:center;margin-top:13px">Bekijk mijn groeirapport →</button>
+    <div class="priv">🔒 Vertrouwelijk behandeld conform GDPR. Geen spam.</div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div class="screen" id="s-results">
+  <div class="rhero">
+    <div class="ringw">
+      <div class="ring">
+        <svg viewBox="0 0 120 120"><circle class="rbg" cx="60" cy="60" r="52"/><circle class="rfill" id="rfill" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="327"/></svg>
+        <div class="rinn"><div class="scn" id="rscore">--</div><div class="scd">/ 32</div></div>
+      </div>
+    </div>
+    <div class="ptag" id="rtag">--</div>
+    <h2 id="rtitle">--</h2>
+    <p id="rdesc">--</p>
+  </div>
+
+  <div class="igrid" id="igrid"></div>
+
+  <div class="rcard">
+    <h3>📊 Score per groeipijler</h3>
+    <div class="rwrap"><canvas id="rc" height="240"></canvas></div>
+  </div>
+
+  <div class="bdcard">
+    <h3>📋 Detailscore per blok</h3>
+    <div id="bd"></div>
+  </div>
+
+  <div class="ctacard">
+    <img src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a93a211a0554ae328fed5c___Primary_Logo_White.svg" alt="OneDigital" style="height:18px;opacity:.35;margin-bottom:18px"/>
+    <h2>Zet de volgende stap</h2>
+    <p>In een gratis strategiegesprek van 30 minuten bekijken we samen welke hefbomen het meeste impact hebben voor jullie specifieke situatie.</p>
+    <div class="cbulls">
+      <span class="cb">Gratis & vrijblijvend</span>
+      <span class="cb">Concreet actieplan</span>
+      <span class="cb">30 minuten</span>
+    </div>
+    <a href="https://calendly.com/onedigital/strategy-call" target="_blank" class="btn btn-a">Plan een gratis strategiegesprek →</a>
+    <p style="margin-top:13px;font-size:.7rem;color:rgba(255,255,255,.3)">Of mail ons: <a href="mailto:info@onedigital.be" style="color:rgba(140,70,245,.75)">info@onedigital.be</a></p>
+  </div>
+</div>
+
+</main>
+
+<footer style="background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding:22px 24px;text-align:center">
+  <img src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a93a211a0554ae328fed5c___Primary_Logo_White.svg" alt="OneDigital" style="height:17px;opacity:.22;margin-bottom:9px;display:block;margin-left:auto;margin-right:auto"/>
+  <p style="font-size:.68rem;color:rgba(255,255,255,.28)">© 2026 OneDigital Group · <a href="https://onedigital.be/privacy" style="color:rgba(255,255,255,.4)">Privacy</a> · <a href="https://onedigital.be" style="color:rgba(255,255,255,.4)">onedigital.be</a></p>
+</footer>
+
+<script>
+const S={rev:null,ans:{}};
+const BL=[
+  {name:'Commerciële motor',qs:[1,2,3],icon:'📈'},
+  {name:'Operationele marge',qs:[4,5,6],icon:'⚙️'},
+  {name:'Digitale groeipositie',qs:[7,8],icon:'🚀'},
+];
+
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  upProg(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function upProg(id){
+  const pg=document.getElementById('prog'),hero=document.getElementById('hero');
+  const fill=document.getElementById('prog-fill'),bl=document.getElementById('prog-block'),co=document.getElementById('prog-count');
+  if(id==='intro'||id==='results'){pg.style.display='none';hero.style.display=id==='intro'?'':'none';return;}
+  hero.style.display='none';pg.style.display='';
+  if(id==='lead'){fill.style.width='100%';bl.textContent='Bijna klaar!';co.textContent='Jouw gegevens';return;}
+  const q=parseInt(id);
+  fill.style.width=((q-1)/8*100)+'%';
+  const b=BL.find(b=>b.qs.includes(q)),bi=BL.indexOf(b)+1;
+  bl.textContent=`${b.icon} Blok ${bi} van 3 · ${b.name}`;
+  co.textContent=`Vraag ${q} / 8`;
+}
+
+function selRev(el,v){
+  document.querySelectorAll('.ropt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');S.rev=v;
+  document.getElementById('start-btn').disabled=false;
+}
+
+function pick(el,q,score){
+  el.closest('.opts').querySelectorAll('.opt').forEach(o=>o.classList.remove('sel'));
+  el.classList.add('sel');S.ans[q]=score;
+  const nb=document.getElementById('n'+q);if(nb)nb.disabled=false;
+}
+
+function calc(){
+  const total=Object.values(S.ans).reduce((a,b)=>a+b,0);
+  const bs=BL.map(b=>{const sum=b.qs.reduce((a,q)=>a+(S.ans[q]||0),0),max=b.qs.length*4;return{...b,sum,max,pct:Math.round(sum/max*100)};});
+  return{total,bs};
+}
+
+function prof(t){
+  return[
+    {min:8,max:14,tag:'Groeifase 1',title:'Jullie groeipotentieel is substantieel',desc:'Bedrijven in jullie omzetcategorie laten gemiddeld 25–40% top-line groei liggen door digitale achterstanden. De hefbomen zijn concreet en snel activeerbaar.',g:'25–40%',e:'8–15%',ttv:'3–6 maanden',c:'#ef4444'},
+    {min:15,max:21,tag:'Groeifase 2',title:'Sterke basis, significante groeimarge',desc:'Jullie hebben een solide fundament. De volgende optimalisatielaag kan 15–25% extra top-line groei en 3–8% EBITDA-verbetering opleveren via gerichte interventies.',g:'15–25%',e:'3–8%',ttv:'2–4 maanden',c:'#f97316'},
+    {min:22,max:27,tag:'Groeifase 3',title:'Goed bezig — de marge zit in de details',desc:'Jullie presteren boven het gemiddelde. Gerichte optimalisatie van de zwakste schakels levert nog 10–15% extra rendement op bestaande investeringen.',g:'10–15%',e:'2–5%',ttv:'1–3 maanden',c:'#8c46f5'},
+    {min:28,max:32,tag:'Digitale Koploper',title:'Jullie benchmarken de markt',desc:'Jullie digitale volwassenheid is uitzonderlijk. AI-search optimalisatie en verdere automatisering zijn de volgende frontier om de voorsprong te vergroten.',g:'5–10%',e:'1–3%',ttv:'Direct',c:'#8c46f5'},
+  ].find(p=>t>=p.min&&t<=p.max)||{min:8,max:14,tag:'Groeifase 1',title:'—',desc:'—',g:'—',e:'—',ttv:'—',c:'#8c46f5'};
+}
+
+function submit(){
+  const fn=document.getElementById('fn').value.trim(),ln=document.getElementById('ln').value.trim(),co=document.getElementById('co').value.trim(),em=document.getElementById('em').value.trim();
+  const err=document.getElementById('err');
+  if(!fn||!ln||!co||!em){err.textContent='Vul alle verplichte velden (*) in.';err.style.display='block';return;}
+  if(!/\S+@\S+\.\S+/.test(em)){err.textContent='Vul een geldig e-mailadres in.';err.style.display='block';return;}
+  err.style.display='none';
+  const btn=document.getElementById('sub-btn');
+  btn.disabled=true;btn.innerHTML='<div class="spin"></div> Rapport wordt opgesteld...';
+  setTimeout(()=>{render();go('results');},1200);
+}
+
+let ci=null;
+function render(){
+  const{total,bs}=calc();const p=prof(total);
+  const rf=document.getElementById('rfill');
+  rf.style.stroke=p.c;
+  setTimeout(()=>{rf.style.strokeDashoffset=327-(total/32)*327;},100);
+  document.getElementById('rscore').textContent=total;
+  document.getElementById('rtag').textContent=p.tag;
+  document.getElementById('rtitle').textContent=p.title;
+  document.getElementById('rdesc').textContent=p.desc;
+  document.getElementById('igrid').innerHTML=`
+    <div class="icard"><div class="iico">📈</div><div class="ival g">${p.g}</div><div class="ilbl">Indicatieve top-line groeimarge</div></div>
+    <div class="icard"><div class="iico">💰</div><div class="ival p">${p.e}</div><div class="ilbl">EBITDA-verbeteringspotentieel</div></div>
+    <div class="icard"><div class="iico">⚡</div><div class="ival">${p.ttv}</div><div class="ilbl">Verwachte time-to-impact</div></div>`;
+  if(ci)ci.destroy();
+  ci=new Chart(document.getElementById('rc').getContext('2d'),{
+    type:'radar',
+    data:{labels:bs.map(b=>b.name),datasets:[{label:'Score',data:bs.map(b=>b.pct),backgroundColor:'rgba(140,70,245,.1)',borderColor:'#8c46f5',borderWidth:2,pointBackgroundColor:'#8c46f5',pointRadius:4}]},
+    options:{responsive:true,scales:{r:{beginAtZero:true,max:100,ticks:{display:false},grid:{color:'rgba(30,28,27,.07)'},pointLabels:{font:{family:'Inter',size:11,weight:'500'},color:'#1e1c1b'}}},plugins:{legend:{display:false}}}
+  });
+  document.getElementById('bd').innerHTML=bs.map(b=>`
+    <div class="drow">
+      <div class="dlbl">${b.icon} ${b.name}</div>
+      <div class="dtrack"><div class="dfill" style="width:${b.pct}%;background:${b.pct<40?'#ef4444':b.pct<65?'#f97316':'#8c46f5'}"></div></div>
+      <div class="dscore">${b.sum}/${b.max}</div>
+    </div>`).join('');
+}
+
+upProg('intro');
+</script>
+</body>
+</html>
