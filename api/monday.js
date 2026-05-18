@@ -68,8 +68,9 @@ function buildColumnValues(colMap, body) {
     set(['telefoon', 'phone', 'gsm', 'tel'], { phone: clean, countryShortName: 'BE' });
   }
 
-  // Bron
-  set(['bron', 'source', 'kanaal'], { label: 'Digital Growth Audit' });
+  // Bron → voeg "Digital Growth Audit" handmatig toe als label in Monday
+  // of uncomment onderstaande lijn nadat je het label hebt aangemaakt:
+  // set(['bron', 'source', 'kanaal'], { label: 'Digital Growth Audit' });
 
   return cv;
 }
@@ -174,15 +175,18 @@ module.exports = async function handler(req, res) {
 
     if (!itemId) throw new Error('Item ID ontbreekt in response');
 
-    // 4. Audit details als update/reactie toevoegen
+    // 4. Audit details toevoegen als update (= Reacties in Monday)
     const notes = buildNotes(body);
-    await mondayQuery(`
-      mutation($itemId: ID!, $body: String!) {
-        create_update(item_id: $itemId, body: $body) { id }
-      }
-    `, { itemId: String(itemId), body: notes });
+    console.log('[Monday] Notes lengte:', notes.length);
 
-    console.log('[Monday] Update toegevoegd aan item', itemId);
+    const updateData = await mondayQuery(
+      `mutation($itemId: ID!, $body: String!) {
+        create_update(item_id: $itemId, body: $body) { id }
+      }`,
+      { itemId: String(itemId), body: notes }
+    );
+
+    console.log('[Monday] Update aangemaakt:', updateData?.create_update?.id);
     return res.status(200).json({ success: true, itemId });
 
   } catch (err) {
