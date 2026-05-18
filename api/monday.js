@@ -68,9 +68,8 @@ function buildColumnValues(colMap, body) {
     set(['telefoon', 'phone', 'gsm', 'tel'], { phone: clean, countryShortName: 'BE' });
   }
 
-  // Bron → voeg "Digital Growth Audit" handmatig toe als label in Monday
-  // of uncomment onderstaande lijn nadat je het label hebt aangemaakt:
-  // set(['bron', 'source', 'kanaal'], { label: 'Digital Growth Audit' });
+  // Bron
+  set(['bron', 'source', 'kanaal'], { label: 'Meta ads' });
 
   // Reacties = long_text kolom — audit resultaten direct in de kolom
   const notes = buildNotes(body);
