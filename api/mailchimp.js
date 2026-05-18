@@ -56,22 +56,7 @@ module.exports = async function handler(req, res) {
       throw new Error(`Mailchimp: ${memberData.detail || memberData.title || memberRes.status}`);
     }
     console.log('[Mailchimp] Contact toegevoegd:', email);
-
-    // Tags toevoegen
-    const tags = [
-      'Digital Growth Audit',
-      profile,
-      revenue ? `Omzet: ${revenue}` : null,
-      score ? `Score: ${score}` : null,
-    ].filter(Boolean);
-
-    await fetch(`${baseUrl}/lists/${MAILCHIMP_AUDIENCE_ID}/members/${hash}/tags`, {
-      method: 'POST',
-      headers: { Authorization: auth, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ tags: tags.map(name => ({ name, status: 'active' })) }),
-    });
-
-    console.log('[Mailchimp] Tags toegevoegd:', tags.join(', '));
+    // Tag wordt toegewezen via Zapier (triggered by new Monday item)
     return res.status(200).json({ success: true });
 
   } catch (err) {
