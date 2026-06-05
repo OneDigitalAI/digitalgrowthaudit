@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Jouw groeirapport — OneDigital</title>
+<meta name="robots" content="noindex,nofollow"/>
+<link rel="icon" href="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a81d01913fff678fe3805c___Logo_Icon_Lavander%20(5)%20(1).png"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '725164062670315');
+fbq('track', 'PageView');
+fbq('track', 'Lead');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=725164062670315&ev=Lead&noscript=1"/>
+</noscript>
+<!-- End Meta Pixel -->
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --dark:#1e1c1b;
+  --accent:#8c46f5;
+  --accent-dim:rgba(140,70,245,0.09);
+  --accent-border:rgba(140,70,245,0.22);
+  --bg:#f1f1f1;
+  --card:#fff;
+  --border:rgba(30,28,27,0.1);
+  --border-med:rgba(30,28,27,0.18);
+  --muted:#7a7a7a;
+  --text:#1e1c1b;
+  --ff:'Inter',system-ui,sans-serif;
+  --r:12px;--r-sm:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--ff);background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;font-weight:400;font-size:16px}
+
+.bar{background:#fff;border-bottom:1px solid var(--border);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.bar img{height:22px;display:block}
+.badge{font-size:.62rem;font-weight:500;background:var(--dark);color:#fff;padding:4px 11px;border-radius:100px;letter-spacing:.05em;white-space:nowrap}
+
+main{max-width:660px;width:100%;margin:0 auto;padding:32px 24px 80px}
+
+/* RESULTS HERO */
+.rhero{
+  text-align:center;padding:40px 24px 28px;border-radius:var(--r);color:#fff;margin-bottom:14px;
+  position:relative;overflow:hidden;
+  background:linear-gradient(rgba(20,18,18,0.55),rgba(20,18,18,0.55)),url('https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a427f5fd7ca35f82f5315c_purple_sweep.webp');
+  background-size:cover;background-position:center;
+}
+.rhero>*{position:relative;z-index:1}
+.ringw{display:flex;justify-content:center;margin-bottom:16px}
+.ring{width:118px;height:118px;position:relative}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.rbg{fill:none;stroke:rgba(255,255,255,.1);stroke-width:7}
+.rfill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.4s cubic-bezier(.4,0,.2,1)}
+.rinn{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.scn{font-size:1.9rem;font-weight:700;color:#fff;line-height:1;letter-spacing:-.02em}
+.scd{font-size:.63rem;color:rgba(255,255,255,.38)}
+.ptag{display:inline-block;background:var(--accent);color:#fff;padding:4px 13px;border-radius:100px;font-weight:500;font-size:.63rem;letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px}
+.rhero h2{font-size:1.15rem;font-weight:600;margin-bottom:7px;letter-spacing:-.01em}
+.rhero p{font-size:.83rem;color:rgba(255,255,255,.6);max-width:400px;margin:0 auto;line-height:1.65}
+
+/* IMPACT GRID */
+.igrid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.icard-small{background:var(--card);border:1px solid var(--border);border-radius:var(--r-sm);padding:18px 14px;text-align:center}
+.iico{font-size:.95rem;margin-bottom:5px}
+.ival{font-size:1.1rem;font-weight:700;color:var(--text);line-height:1;margin-bottom:3px;letter-spacing:-.02em}
+.ival.g{color:#16a34a}.ival.p{color:var(--accent)}
+.ilbl{font-size:.66rem;color:var(--muted);line-height:1.35}
+
+/* GROEIANALYST CTA */
+.groei-cta{
+  border-radius:var(--r);margin-bottom:14px;overflow:hidden;
+  background:linear-gradient(rgba(20,18,18,0.55),rgba(20,18,18,0.55)),url('https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69abdf0d2d43212be9d3ac30_purple_mist.webp');
+  background-size:cover;background-position:center;
+}
+.groei-cta-inner{padding:36px 32px;text-align:center}
+.groei-cta-tag{display:inline-block;font-size:.63rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);background:rgba(255,255,255,.12);padding:4px 12px;border-radius:100px;border:1px solid rgba(255,255,255,.2);margin-bottom:14px}
+.groei-cta-title{font-size:1.6rem;font-weight:700;color:#fff;letter-spacing:-.02em;margin-bottom:12px;line-height:1.1}
+.groei-cta-desc{font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.72;max-width:440px;margin:0 auto 24px;font-weight:400}
+.groei-cta-btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);color:#fff;padding:15px 32px;border-radius:var(--r-sm);font-family:var(--ff);font-size:.95rem;font-weight:600;text-decoration:none;transition:all .15s;margin-bottom:14px}
+.groei-cta-btn:hover{background:#7a38e0;transform:translateY(-1px)}
+.groei-cta-sub{font-size:.72rem;color:rgba(255,255,255,.35);display:block}
+
+/* POTENTIAL */
+.pot-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px;margin-bottom:14px}
+.pot-section h3{font-size:.85rem;font-weight:600;margin-bottom:4px}
+.pot-section .pot-sub{font-size:.78rem;color:var(--muted);margin-bottom:20px;font-weight:400}
+.pot-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.pot-card{border-radius:var(--r-sm);padding:20px 18px}
+.pot-card.omzet{background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);border:1px solid #bbf7d0}
+.pot-card.ebitda{background:linear-gradient(135deg,#faf5ff 0%,#ede9fe 100%);border:1px solid #ddd6fe}
+.pot-card-label{font-size:.65rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+.pot-card.omzet .pot-card-label{color:#16a34a}
+.pot-card.ebitda .pot-card-label{color:var(--accent)}
+.pot-card-amount{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+.pot-card.omzet .pot-card-amount{color:#15803d}
+.pot-card.ebitda .pot-card-amount{color:#6d28d9}
+.pot-card-period{font-size:.7rem;color:var(--muted);font-weight:400;margin-bottom:10px}
+.pot-card-pct{display:inline-flex;align-items:center;gap:4px;font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:100px}
+.pot-card.omzet .pot-card-pct{background:#dcfce7;color:#15803d}
+.pot-card.ebitda .pot-card-pct{background:#ede9fe;color:#6d28d9}
+.pot-basis{font-size:.72rem;color:var(--muted);text-align:center;padding-top:12px;border-top:1px solid var(--border)}
+
+/* RADAR */
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px}
+.rcard h3{font-size:.85rem;font-weight:600;margin-bottom:12px}
+.rwrap{width:100%;max-width:380px;margin:0 auto}
+
+/* BREAKDOWN */
+.bdcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:14px}
+.bdcard h3{font-size:.85rem;font-weight:600;margin-bottom:14px}
+.drow{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.dlbl{flex:0 0 150px;font-size:.77rem;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dtrack{flex:1;height:6px;background:var(--bg);border-radius:100px;overflow:hidden;min-width:0}
+.dfill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.dscore{flex:0 0 34px;text-align:right;font-size:.72rem;font-weight:600}
+
+/* CTA CARD */
+.ctacard{border-radius:var(--r);padding:40px 32px;text-align:center;color:#fff;position:relative;overflow:hidden;
+  background:linear-gradient(rgba(20,18,18,0.60),rgba(20,18,18,0.60)),url('https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69abdf0d2d43212be9d3ac30_purple_mist.webp');
+  background-size:cover;background-position:center;
+}
+.ctacard>*{position:relative;z-index:1}
+.ctacard h2{font-size:1.3rem;font-weight:600;margin-bottom:10px;letter-spacing:-.02em}
+.ctacard>p{font-size:.85rem;color:rgba(255,255,255,.6);margin-bottom:20px;max-width:380px;margin-left:auto;margin-right:auto;line-height:1.7}
+.cbulls{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.cb{font-size:.73rem;color:rgba(255,255,255,.65);display:flex;align-items:center;gap:4px}
+.cb::before{content:'✓';color:var(--accent);font-weight:700}
+.cta-logo{height:18px;opacity:.55;margin-bottom:20px;display:block;margin-left:auto;margin-right:auto;filter:brightness(10)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 22px;border-radius:var(--r-sm);font-family:var(--ff);font-size:.82rem;font-weight:500;cursor:pointer;border:none;transition:all .13s;text-decoration:none;letter-spacing:.01em}
+.btn-a{background:var(--accent);color:#fff;font-size:.9rem;padding:14px 28px;font-weight:600}
+.btn-a:hover{background:#7a38e0}
+.btn-ghost-light{background:transparent;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.18);font-size:.76rem;padding:9px 16px}
+.btn-ghost-light:hover{border-color:rgba(255,255,255,.45);color:#fff}
+.cta-secondary{display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.cta-mail{margin-top:14px;font-size:.72rem;color:rgba(255,255,255,.45)}
+.cta-mail a{color:#fff;text-decoration:none}
+
+@media(max-width:640px){
+  .bar{padding:0 16px;height:50px}
+  .bar img{height:19px}
+  main{padding:20px 14px 60px}
+  .igrid{grid-template-columns:1fr;gap:8px}
+  .pot-cards{grid-template-columns:1fr}
+  .rhero{padding:32px 18px 22px}
+  .ring{width:100px;height:100px}
+  .scn{font-size:1.6rem}
+  .dlbl{flex:0 0 110px;font-size:.72rem}
+  .groei-cta-inner{padding:28px 20px}
+  .groei-cta-title{font-size:1.3rem}
+  .groei-cta-btn{width:100%;padding:14px 20px}
+  .ctacard{padding:24px 16px}
+  .btn-a{width:100%}
+  .cta-secondary{flex-direction:column;align-items:center}
+  .btn-ghost-light{width:100%;justify-content:center}
+  .rcard,.bdcard,.pot-section{padding:18px 14px}
+  .rwrap{max-width:100%}
+}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <img src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a1d638d9088731999a3b3e___Primary_Logo_Black.svg" alt="OneDigital"/>
+  <span class="badge">Digital Growth Audit</span>
+</header>
+
+<main>
+
+  <!-- Score hero -->
+  <div class="rhero">
+    <div class="ringw">
+      <div class="ring">
+        <svg viewBox="0 0 120 120"><circle class="rbg" cx="60" cy="60" r="52"/><circle class="rfill" id="rfill" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="327"/></svg>
+        <div class="rinn"><div class="scn" id="rscore">--</div><div class="scd">/ 100</div></div>
+      </div>
+    </div>
+    <div class="ptag" id="rtag">--</div>
+    <h2 id="rtitle">--</h2>
+    <p id="rdesc">--</p>
+  </div>
+
+  <!-- Impact -->
+  <div class="igrid" id="igrid"></div>
+
+  <!-- Groeianalyst CTA -->
+  <div class="groei-cta">
+    <div class="groei-cta-inner">
+      <div class="groei-cta-tag">Gratis en vrijblijvend</div>
+      <h2 class="groei-cta-title">Praat met een groeianalyst</h2>
+      <p class="groei-cta-desc">Eén gesprek van 30 minuten. Geen verkooppraatje, geen verplichtingen. Wel een groeianalyst die jouw situatie grondig doorneemt en je de concrete tools en inzichten geeft om het maximale uit jouw onderneming te halen.</p>
+      <a href="https://calendly.com/max-onedigital" target="_blank" class="groei-cta-btn">Plan mijn gratis gesprek →</a>
+      <span class="groei-cta-sub">Liever eerst je rapport bekijken? Scroll verder ↓</span>
+    </div>
+  </div>
+
+  <!-- Potentieel -->
+  <div class="pot-section">
+    <h3>💶 Wat staat er op het spel?</h3>
+    <p class="pot-sub">Indicatieve impact op basis van jullie score en omzetcategorie.</p>
+    <div class="pot-cards" id="pot-cards"></div>
+    <p class="pot-basis" id="pot-basis"></p>
+  </div>
+
+  <!-- Radar -->
+  <div class="rcard">
+    <h3>📊 Score per groeipijler</h3>
+    <div class="rwrap"><canvas id="rc"></canvas></div>
+  </div>
+
+  <!-- Breakdown -->
+  <div class="bdcard">
+    <h3>📋 Detailscore per blok</h3>
+    <div id="bd"></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="ctacard">
+    <img class="cta-logo" src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a93a211a0554ae328fed5c___Primary_Logo_White.svg" alt="OneDigital"/>
+    <h2>Zet de volgende stap</h2>
+    <p>In een gratis strategiegesprek van 30 minuten kijken we samen naar welke hefbomen het meeste impact hebben voor jouw specifieke situatie.</p>
+    <div class="cbulls">
+      <span class="cb">Gratis en vrijblijvend</span>
+      <span class="cb">Concreet actieplan</span>
+      <span class="cb">30 minuten</span>
+    </div>
+    <a href="https://calendly.com/max-onedigital" target="_blank" class="btn btn-a">Plan een gratis strategiegesprek →</a>
+    <div class="cta-secondary">
+      <a href="https://scan.onedigital.be" class="btn btn-ghost-light">↺ Doe de test opnieuw</a>
+    </div>
+    <p class="cta-mail">Of mail ons: <a href="mailto:info@onedigital.be">info@onedigital.be</a></p>
+  </div>
+
+</main>
+
+<footer style="background:var(--dark);border-top:1px solid rgba(255,255,255,.05);padding:20px 24px;text-align:center">
+  <img src="https://cdn.prod.website-files.com/69a1d36924911676e418ff1e/69a93a211a0554ae328fed5c___Primary_Logo_White.svg" alt="OneDigital" style="height:16px;opacity:.2;margin-bottom:9px;display:block;margin-left:auto;margin-right:auto;filter:brightness(10)"/>
+  <p style="font-size:.67rem;color:rgba(255,255,255,.25)">© 2026 OneDigital Group · <a href="https://onedigital.be/privacy" style="color:rgba(255,255,255,.38)">Privacy</a> · <a href="https://onedigital.be" style="color:rgba(255,255,255,.38)">onedigital.be</a></p>
+</footer>
+
+<script>
+function fmtK(n){
+  if(n===0)return'€0';
+  if(n>=1000)return'€'+(Math.round(n/100)/10).toFixed(1).replace('.',',')+'M';
+  return'€'+Math.round(n)+'K';
+}
+
+// Lees data uit sessionStorage
+let d = {};
+try { d = JSON.parse(sessionStorage.getItem('oda_result') || '{}'); } catch(e){}
+
+const score   = d.score   || 72;
+const tag     = d.tag     || 'Groeifase 2';
+const title   = d.title   || 'Sterke basis, significante groeimarge';
+const desc    = d.desc    || 'Gerichte optimalisatie kan 15 tot 25% extra top-line groei en 3 tot 8% EBITDA-verbetering opleveren.';
+const color   = d.color   || '#8c46f5';
+const gLo     = d.gLo     || 15;
+const gHi     = d.gHi     || 25;
+const eLo     = d.eLo     || 3;
+const eHi     = d.eHi     || 8;
+const ttv     = d.ttv     || '2 tot 4 maanden';
+const mid     = d.mid     || 2000;
+const rev     = d.rev     || '1M-3M';
+const bs      = d.bs      || [
+  {name:'Commerciële motor',icon:'📈',pct:75},
+  {name:'Operationele marge',icon:'⚙️',pct:60},
+  {name:'Digitale groeipositie',icon:'🚀',pct:65},
+];
+
+// Ring
+const rf = document.getElementById('rfill');
+rf.style.stroke = color;
+setTimeout(()=>{ rf.style.strokeDashoffset = 327 - (score/100)*327; }, 100);
+document.getElementById('rscore').textContent = score;
+document.getElementById('rtag').textContent   = tag;
+document.getElementById('rtitle').textContent = title;
+document.getElementById('rdesc').textContent  = desc;
+
+// Impact
+document.getElementById('igrid').innerHTML = `
+  <div class="icard-small"><div class="iico">📈</div><div class="ival g">${gLo}–${gHi}%</div><div class="ilbl">Top-line groeimarge</div></div>
+  <div class="icard-small"><div class="iico">💰</div><div class="ival p">${eLo}–${eHi}%</div><div class="ilbl">EBITDA-verbetering</div></div>
+  <div class="icard-small"><div class="iico">⚡</div><div class="ival" style="font-size:.95rem">${ttv}</div><div class="ilbl">Time-to-impact</div></div>`;
+
+// Potential
+const gLoK = Math.round(mid * gLo/100), gHiK = Math.round(mid * gHi/100);
+const eLoK = Math.round(mid * eLo/100), eHiK = Math.round(mid * eHi/100);
+const revLabel = {'<1M':'onder €1M','1M-3M':'€1M–€3M','3M-10M':'€3M–€10M','>10M':'boven €10M'}[rev]||'jullie omzetcategorie';
+document.getElementById('pot-cards').innerHTML = `
+  <div class="pot-card omzet">
+    <div class="pot-card-label">📈 Omzetgroei-potentieel</div>
+    <div class="pot-card-amount">${fmtK(gLoK)} – ${fmtK(gHiK)}</div>
+    <div class="pot-card-period">extra omzet per jaar</div>
+    <div class="pot-card-pct">▲ ${gLo}–${gHi}% groei</div>
+  </div>
+  <div class="pot-card ebitda">
+    <div class="pot-card-label">💰 EBITDA-verbetering</div>
+    <div class="pot-card-amount">${fmtK(eLoK)} – ${fmtK(eHiK)}</div>
+    <div class="pot-card-period">extra marge per jaar</div>
+    <div class="pot-card-pct">▲ ${eLo}–${eHi}% verbetering</div>
+  </div>`;
+document.getElementById('pot-basis').textContent = `Indicatief berekend op basis van een omzet ${revLabel} en jullie huidige groeiprofiel.`;
+
+// Radar
+new Chart(document.getElementById('rc').getContext('2d'),{
+  type:'radar',
+  data:{
+    labels: bs.map(b=>b.name),
+    datasets:[{
+      label:'Score',
+      data: bs.map(b=>b.pct),
+      backgroundColor:'rgba(140,70,245,.1)',
+      borderColor:'#8c46f5',
+      borderWidth:2,
+      pointBackgroundColor:'#8c46f5',
+      pointRadius:5,
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    layout:{padding:{top:32,bottom:32,left:40,right:40}},
+    scales:{r:{
+      beginAtZero:true,max:100,
+      ticks:{display:false},
+      grid:{color:'rgba(30,28,27,.07)'},
+      pointLabels:{font:{family:'Inter',size:11,weight:'500'},color:'#1e1c1b',padding:20},
+    }},
+    plugins:{legend:{display:false}},
+  }
+});
+
+// Breakdown
+document.getElementById('bd').innerHTML = bs.map(b=>`
+  <div class="drow">
+    <div class="dlbl">${b.icon} ${b.name}</div>
+    <div class="dtrack"><div class="dfill" style="width:${b.pct}%;background:${b.pct<40?'#ef4444':b.pct<65?'#f97316':'#8c46f5'}"></div></div>
+    <div class="dscore">${b.pct}%</div>
+  </div>`).join('');
+</script>
+</body>
+</html>
