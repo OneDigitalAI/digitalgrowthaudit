@@ -849,7 +849,12 @@ function submitLead(){
   });
 
   // Toon rapport direct zonder te wachten op API-respons
-  setTimeout(()=>{render();go('results');},1200);
+  if(typeof fbq !== 'undefined') fbq('track', 'Lead');
+setTimeout(()=>{
+  render();
+  go('results');
+  setTimeout(()=>{ window.location.href = '/bedankt'; }, 4000);
+}, 1200);
 }
 
 /* ── COPY SCORE ──────────────────────────────── */
