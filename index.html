@@ -853,7 +853,18 @@ function submitLead(){
 setTimeout(()=>{
   render();
   go('results');
-  setTimeout(()=>{ window.location.href = '/bedankt'; }, 4000);
+  setTimeout(()=>{
+  const{raw,display,bs}=calc();
+  const p=getProf(raw);
+  sessionStorage.setItem('oda_result', JSON.stringify({
+    score:display, tag:p.tag, title:p.title, desc:p.desc, color:p.c,
+    gLo:Math.round(p.gLo*100), gHi:Math.round(p.gHi*100),
+    eLo:Math.round(p.eLo*100), eHi:Math.round(p.eHi*100),
+    ttv:p.ttv, mid:S.mid, rev:S.rev,
+    bs:bs.map(b=>({name:b.name,icon:b.icon,pct:b.pct}))
+  }));
+  window.location.href = '/bedankt';
+}, 4000);
 }, 1200);
 }
 
